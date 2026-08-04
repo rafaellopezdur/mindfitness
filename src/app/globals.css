@@ -1,0 +1,131 @@
+@import 'tailwindcss';
+
+/* ═══════════════════════════════════════════════════════════════
+   Mind Fitness Club · tokens de diseño
+   Paleta extraída del logotipo y confirmada contra la tabla de
+   precios real del sitio (ago 2026).
+   Documentación: docs/08-identidad-visual.md
+   ═══════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* ── Marca ─────────────────────────────────────────────────── */
+  --color-brand-50: #fdf6ee;
+  --color-brand-100: #f9e7ce;
+  --color-brand-200: #f7d3a0;
+  --color-brand-300: #f5bc6d; /* ámbar del logo · SOLO superficie sobre claro */
+  --color-brand-400: #d9a06b; /* variante para fondo oscuro */
+  --color-brand-500: #c08551; /* cobre del logo · botones, iconos (3,1:1) */
+  --color-brand-600: #a66c3b;
+  --color-brand-700: #8a5a2e; /* texto de marca sobre blanco (5,9:1 AA) */
+  --color-brand-800: #613f21;
+  --color-brand-900: #3b2415; /* texto sobre ámbar (8,5:1) */
+  --color-brand-950: #241309;
+
+  /* ── Neutros cálidos (stone) ───────────────────────────────── */
+  --color-surface: #fafaf9;
+  --color-surface-raised: #ffffff;
+  --color-surface-sunken: #f5f5f4;
+  --color-border: #e7e5e4;
+  --color-border-strong: #d6d3d1;
+  --color-text: #292524;
+  --color-text-muted: #78716c;
+  --color-text-subtle: #a8a29e;
+
+  /* ── Negro de marca (portal público) ───────────────────────── */
+  --color-ink: #111111;
+  --color-ink-soft: #1c1917;
+
+  /* ── Semánticos · un color = un significado ────────────────── */
+  --color-success: #15803d;
+  --color-success-bg: #f0fdf4;
+  --color-warning: #b45309;
+  --color-warning-bg: #fffbeb;
+  --color-danger: #b91c1c;
+  --color-danger-bg: #fef2f2;
+  --color-info: #1d4ed8;
+  --color-info-bg: #eff6ff;
+  --color-idle: #57534e;
+  --color-idle-bg: #f5f5f4;
+
+  /* ── Tipografía ────────────────────────────────────────────── */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), var(--font-inter), sans-serif;
+
+  /* ── Radios y sombras ──────────────────────────────────────── */
+  --radius-card: 1rem;
+  --shadow-card: 0 1px 2px 0 rgb(41 37 36 / 0.04), 0 1px 3px 0 rgb(41 37 36 / 0.06);
+  --shadow-raised: 0 4px 6px -1px rgb(41 37 36 / 0.07), 0 2px 4px -2px rgb(41 37 36 / 0.05);
+}
+
+/* ── Modo oscuro del portal administrativo ───────────────────── */
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      color-scheme: dark;
+      --color-surface: #1c1917;
+      --color-surface-raised: #292524;
+      --color-surface-sunken: #171412;
+      --color-border: #44403c;
+      --color-border-strong: #57534e;
+      --color-text: #f5f5f4;
+      --color-text-muted: #a8a29e;
+      --color-text-subtle: #78716c;
+      --color-success-bg: #052e16;
+      --color-warning-bg: #2c1a05;
+      --color-danger-bg: #300c0c;
+      --color-info-bg: #0b1a3f;
+      --color-idle-bg: #292524;
+    }
+  }
+
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --color-surface: #1c1917;
+    --color-surface-raised: #292524;
+    --color-surface-sunken: #171412;
+    --color-border: #44403c;
+    --color-border-strong: #57534e;
+    --color-text: #f5f5f4;
+    --color-text-muted: #a8a29e;
+    --color-text-subtle: #78716c;
+  }
+
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Los importes se alinean en columna. Innegociable. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+
+  /* Foco visible siempre — requisito de accesibilidad (WCAG 2.1 AA) */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

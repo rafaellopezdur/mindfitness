@@ -1,4 +1,7 @@
-import 'server-only'
+// Sin `server-only`: este módulo lo comparten la aplicación y los scripts de
+// Node (seed, mantenimiento), que no corren dentro del runtime de Next.
+// La protección real es que @node-rs/argon2 es un módulo nativo: cualquier
+// intento de incluirlo en el bundle del navegador rompe la compilación.
 import { hash, verify } from '@node-rs/argon2'
 
 /**

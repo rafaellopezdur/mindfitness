@@ -58,8 +58,8 @@ export const NAV_GROUPS: NavGroup[] = [
     id: 'servicios',
     label: 'Servicios',
     items: [
-      { href: '/admin/planes', label: 'Planes', icon: 'tag', anyOf: [P.PLAN_CREATE], soon: true },
-      { href: '/admin/membresias', label: 'Membresías', icon: 'card', anyOf: [P.MEMBERSHIP_READ], soon: true },
+      { href: '/admin/planes', label: 'Planes', icon: 'tag', anyOf: [P.PLAN_READ] },
+      { href: '/admin/membresias', label: 'Membresías', icon: 'card', anyOf: [P.MEMBERSHIP_READ] },
       { href: '/admin/horarios', label: 'Horarios', icon: 'clock', anyOf: [P.SCHEDULE_CREATE], soon: true },
       { href: '/admin/entrenadores', label: 'Entrenadores', icon: 'whistle', anyOf: [P.TRAINER_READ], soon: true },
     ],

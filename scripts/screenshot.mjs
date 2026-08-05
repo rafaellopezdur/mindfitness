@@ -70,7 +70,8 @@ function connect(wsUrl) {
     const resolver = pending.get(msg.id)
     if (!resolver) return
     pending.delete(msg.id)
-    msg.error ? resolver.reject(new Error(msg.error.message)) : resolver.resolve(msg.result)
+    if (msg.error) resolver.reject(new Error(msg.error.message))
+    else resolver.resolve(msg.result)
   })
 
   const send = (method, params = {}) =>
@@ -111,6 +112,19 @@ async function main() {
       await client.ready
 
       await client.send('Page.enable')
+
+      // Permite capturar el panel autenticado: MFC_COOKIE=nombre=valor
+      if (process.env.MFC_COOKIE) {
+        const [name, ...rest] = process.env.MFC_COOKIE.split('=')
+        await client.send('Network.setCookie', {
+          name,
+          value: rest.join('='),
+          domain: 'localhost',
+          path: '/',
+          httpOnly: true,
+        })
+      }
+
       await client.send('Emulation.setDeviceMetricsOverride', {
         width: vp.width,
         height: vp.height,

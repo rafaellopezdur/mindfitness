@@ -23,7 +23,7 @@ const config = [
   },
   {
     // El seed y los scripts sí imprimen por consola: es su interfaz.
-    files: ['prisma/**/*.ts', 'scripts/**/*.ts'],
+    files: ['prisma/**/*.ts', 'scripts/**'],
     rules: { 'no-console': 'off' },
   },
 ]

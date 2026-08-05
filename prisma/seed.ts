@@ -213,11 +213,87 @@ async function seedSettings() {
   console.log(`  ✓ ${settings.length} claves de configuración`)
 }
 
+/**
+ * Catálogo real (docs/15-catalogo-planes.md).
+ * Idempotente por `code`/`slug`: no pisa lo que se haya editado desde el panel.
+ */
+async function seedCatalog() {
+  for (const service of SERVICES) {
+    await prisma.service.upsert({
+      where: { code: service.code },
+      update: {},
+      create: {
+        code: service.code,
+        name: service.name,
+        description: service.description,
+        kind: service.kind as never,
+        unit: service.unit as never,
+        requiresTrainer: service.requiresTrainer,
+        icon: service.icon,
+        sortOrder: service.sortOrder,
+      },
+    })
+  }
+  console.log(`  ✓ ${SERVICES.length} servicios`)
+
+  const services = await prisma.service.findMany()
+  const byCode = new Map(services.map((service) => [service.code, service.id]))
+
+  for (const plan of PLANS) {
+    const existing = await prisma.plan.findUnique({ where: { slug: plan.slug } })
+    if (existing) {
+      console.log(`  · plan ${plan.slug} ya existe, no se modifica`)
+      continue
+    }
+
+    const created = await prisma.plan.create({
+      data: {
+        slug: plan.slug,
+        name: plan.name,
+        description: plan.description,
+        price: BigInt(plan.price),
+        durationValue: plan.durationValue,
+        durationUnit: plan.durationUnit as never,
+        sessionLimit: 'sessionLimit' in plan ? plan.sessionLimit : null,
+        weeklyVisitLimit: 'weeklyVisitLimit' in plan ? plan.weeklyVisitLimit : null,
+        modality: plan.modality as never,
+        requiresSchedule: plan.requiresSchedule,
+        graceDays: RULES.defaultGraceDays,
+        isPublic: plan.isPublic,
+        isRecommended: plan.isRecommended,
+        allowsOnlineRegistration: plan.allowsOnlineRegistration,
+        status: 'ACTIVE',
+        benefits: plan.benefits as never,
+        sortOrder: plan.sortOrder,
+      },
+    })
+
+    // Los derechos: lo que de verdad tiene contratado quien compre este plan.
+    for (const entitlement of plan.entitlements) {
+      const serviceId = byCode.get(entitlement.service)
+      if (!serviceId) continue
+      await prisma.planEntitlement.create({
+        data: {
+          planId: created.id,
+          serviceId,
+          quantity: entitlement.quantity,
+          period: entitlement.period as never,
+          rollover: RULES.entitlementRollover,
+        },
+      })
+    }
+
+    const incluidos = plan.entitlements.length
+    console.log(`  ✓ plan ${plan.slug.padEnd(12)} → ${incluidos} servicios incluidos`)
+  }
+}
+
 async function main() {
   console.log('\n🌱 Sembrando Mind Fitness Club…\n')
   await seedPermissions()
   await seedRoles()
   await seedSettings()
+  await seedCatalog()
   await seedOwner()
   console.log('✅ Listo.\n')
 }

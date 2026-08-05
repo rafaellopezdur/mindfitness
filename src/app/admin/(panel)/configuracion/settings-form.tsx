@@ -40,17 +40,17 @@ export function SettingsForm({
       {state.message && (
         <p
           role="status"
-          className={`rounded-lg px-3 py-2.5 text-sm ${state.ok ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'}`}
+          className={`rounded-lg px-3 py-2.5 text-sm ${state.ok ? 'bg-ok-surface text-ok' : 'bg-risk-surface text-risk'}`}
         >
           {state.message}
         </p>
       )}
 
       {section === 'negocio' && (
-        <section className="space-y-4 rounded-2xl border border-[--color-border] bg-[--color-surface-raised] p-5">
+        <section className="space-y-4 rounded-2xl border border-line bg-surface p-5">
           <div>
-            <h2 className="text-sm font-semibold text-[--color-text]">Información del gimnasio</h2>
-            <p className="mt-0.5 text-xs text-[--color-text-muted]">
+            <h2 className="text-sm font-semibold text-ink">Información del gimnasio</h2>
+            <p className="mt-0.5 text-xs text-ink-soft">
               Estos datos aparecen en el panel, los correos y el portal público.
             </p>
           </div>
@@ -85,13 +85,13 @@ export function SettingsForm({
       )}
 
       {section === 'reglas' && (
-        <section className="space-y-4 rounded-2xl border border-[--color-border] bg-[--color-surface-raised] p-5">
+        <section className="space-y-4 rounded-2xl border border-line bg-surface p-5">
           <div>
-            <h2 className="flex items-center gap-2 text-sm font-semibold text-[--color-text]">
+            <h2 className="flex items-center gap-2 text-sm font-semibold text-ink">
               Reglas de vencimiento y acceso
-              {!canEditCritical && <Lock className="size-3.5 text-[--color-text-muted]" aria-hidden />}
+              {!canEditCritical && <Lock className="size-3.5 text-ink-soft" aria-hidden />}
             </h2>
-            <p className="mt-0.5 text-xs text-[--color-text-muted]">
+            <p className="mt-0.5 text-xs text-ink-soft">
               {canEditCritical
                 ? 'Cambiarlas afecta a cómo se calculan los estados de todas las membresías. Queda registrado en la auditoría.'
                 : 'Solo una propietaria puede modificar estas reglas.'}
@@ -142,7 +142,7 @@ export function SettingsForm({
                 id="rules.month_mode"
                 name="rules.month_mode"
                 defaultValue={String(values.rules['rules.month_mode'])}
-                className="min-h-11 w-full rounded-lg border border-[--color-border-strong] bg-[--color-surface-raised] px-3 text-sm text-[--color-text]"
+                className="min-h-11 w-full rounded-lg border border-line-strong bg-surface px-3 text-sm text-ink"
               >
                 <option value="CALENDAR">Mes calendario</option>
                 <option value="FIXED_30_DAYS">30 días exactos</option>
@@ -158,7 +158,7 @@ export function SettingsForm({
                 id="rules.weekly_limit_enforcement"
                 name="rules.weekly_limit_enforcement"
                 defaultValue={String(values.rules['rules.weekly_limit_enforcement'])}
-                className="min-h-11 w-full rounded-lg border border-[--color-border-strong] bg-[--color-surface-raised] px-3 text-sm text-[--color-text]"
+                className="min-h-11 w-full rounded-lg border border-line-strong bg-surface px-3 text-sm text-ink"
               >
                 <option value="WARN">Avisar y registrar</option>
                 <option value="BLOCK">Bloquear la entrada</option>
@@ -175,23 +175,23 @@ export function SettingsForm({
                 id="rules.authorization_mode"
                 name="rules.authorization_mode"
                 defaultValue={String(values.rules['rules.authorization_mode'])}
-                className="min-h-11 w-full rounded-lg border border-[--color-border-strong] bg-[--color-surface-raised] px-3 text-sm text-[--color-text]"
+                className="min-h-11 w-full rounded-lg border border-line-strong bg-surface px-3 text-sm text-ink"
               >
                 <option value="OPERATIONAL">Operativo · prestar y aprobar después</option>
                 <option value="STRICT">Estricto · esperar la aprobación</option>
               </select>
             </Field>
 
-            <label className="flex items-start gap-2 text-sm text-[--color-text]">
+            <label className="flex items-start gap-2 text-sm text-ink">
               <input
                 type="checkbox"
                 name="rules.entitlement_rollover"
                 defaultChecked={Boolean(values.rules['rules.entitlement_rollover'])}
-                className="mt-0.5 size-4 accent-[--color-brand-500]"
+                className="mt-0.5 size-4 accent-brand-500"
               />
               <span>
                 Los días o sesiones no usados pasan al periodo siguiente
-                <span className="block text-xs text-[--color-text-muted]">
+                <span className="block text-xs text-ink-soft">
                   Desactivado, lo no usado se pierde al renovar.
                 </span>
               </span>
@@ -201,10 +201,10 @@ export function SettingsForm({
       )}
 
       {section === 'clientes' && (
-        <section className="space-y-4 rounded-2xl border border-[--color-border] bg-[--color-surface-raised] p-5">
+        <section className="space-y-4 rounded-2xl border border-line bg-surface p-5">
           <div>
-            <h2 className="text-sm font-semibold text-[--color-text]">Canales de adquisición</h2>
-            <p className="mt-0.5 text-xs text-[--color-text-muted]">
+            <h2 className="text-sm font-semibold text-ink">Canales de adquisición</h2>
+            <p className="mt-0.5 text-xs text-ink-soft">
               Opciones de «¿cómo nos conoció?» en la ficha del cliente. Una por línea.
             </p>
           </div>
@@ -218,7 +218,7 @@ export function SettingsForm({
               name="clients.acquisition_channels"
               rows={7}
               defaultValue={values.channels.join('\n')}
-              className="block w-full rounded-lg border border-[--color-border-strong] bg-[--color-surface-raised] px-3 py-2 text-sm text-[--color-text]"
+              className="block w-full rounded-lg border border-line-strong bg-surface px-3 py-2 text-sm text-ink"
             />
           </Field>
         </section>

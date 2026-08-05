@@ -12,7 +12,7 @@ const INITIAL: FormState = { ok: false }
 function SubmitButton() {
   const { pending } = useFormStatus()
   return (
-    <Button type="submit" size="block" disabled={pending}>
+    <Button type="submit" size="lg" block disabled={pending}>
       {pending ? 'Guardando…' : 'Guardar contraseña'}
     </Button>
   )

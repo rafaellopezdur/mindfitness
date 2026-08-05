@@ -17,7 +17,7 @@ export default async function LoginPage({
   const { volver } = await searchParams
 
   return (
-    <main className="grid min-h-dvh grid-cols-1 place-items-center bg-ink px-4 py-10">
+    <main className="grid min-h-dvh grid-cols-1 place-items-center bg-night px-4 py-10">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center text-center">
           {/* Versión en blanco: el fondo del portal es negro (docs/08 §2). */}
@@ -25,7 +25,7 @@ export default async function LoginPage({
           <p className="mt-3 text-sm text-stone-400">Portal administrativo</p>
         </div>
 
-        <div className="rounded-2xl bg-[--color-surface-raised] p-6 shadow-lg">
+        <div className="rounded-2xl bg-surface p-6 shadow-lg">
           <LoginForm volver={volver} />
         </div>
 

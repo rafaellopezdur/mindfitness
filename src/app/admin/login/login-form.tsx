@@ -12,7 +12,7 @@ const INITIAL: FormState = { ok: false }
 function SubmitButton() {
   const { pending } = useFormStatus()
   return (
-    <Button type="submit" size="block" disabled={pending}>
+    <Button type="submit" size="lg" block disabled={pending}>
       {pending ? 'Entrando…' : 'Entrar'}
     </Button>
   )
@@ -28,7 +28,7 @@ export function LoginForm({ volver }: { volver?: string }) {
       {state.message && (
         <div
           role="alert"
-          className="flex items-start gap-2 rounded-lg bg-danger-bg px-3 py-2.5 text-sm text-danger"
+          className="flex items-start gap-2 rounded-lg bg-risk-surface px-3 py-2.5 text-sm text-risk"
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden />
           <span>{state.message}</span>

@@ -11,7 +11,7 @@ export default async function ChangePasswordPage() {
   if (!user) redirect('/admin/login')
 
   return (
-    <main className="grid min-h-dvh grid-cols-1 place-items-center bg-ink px-4 py-10">
+    <main className="grid min-h-dvh grid-cols-1 place-items-center bg-night px-4 py-10">
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
           <span className="inline-flex size-11 items-center justify-center rounded-full bg-brand-300/15 text-brand-300">
@@ -25,7 +25,7 @@ export default async function ChangePasswordPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl bg-[--color-surface-raised] p-6 shadow-lg">
+        <div className="rounded-2xl bg-surface p-6 shadow-lg">
           <ChangePasswordForm />
         </div>
 

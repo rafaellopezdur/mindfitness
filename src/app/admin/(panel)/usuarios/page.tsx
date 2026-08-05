@@ -44,7 +44,7 @@ export default async function UsersPage() {
         {users.map((user) => (
           <li
             key={user.id}
-            className="rounded-2xl border border-[--color-border] bg-[--color-surface-raised] p-4"
+            className="rounded-2xl border border-line bg-surface p-4"
           >
             <div className="flex items-start gap-3">
               <span
@@ -54,8 +54,8 @@ export default async function UsersPage() {
                 {initials(user.fullName)}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-[--color-text]">{user.fullName}</p>
-                <p className="truncate text-xs text-[--color-text-muted]">{user.email}</p>
+                <p className="truncate text-sm font-medium text-ink">{user.fullName}</p>
+                <p className="truncate text-xs text-ink-soft">{user.email}</p>
                 <div className="mt-2 flex flex-wrap items-center gap-1.5">
                   {user.roles.map((r) => (
                     <RoleChip key={r.roleId} code={r.role.code as RoleCode} />
@@ -75,10 +75,10 @@ export default async function UsersPage() {
         ))}
       </ul>
 
-      <div className="hidden overflow-hidden rounded-2xl border border-[--color-border] bg-[--color-surface-raised] lg:block">
+      <div className="hidden overflow-hidden rounded-2xl border border-line bg-surface lg:block">
         <table className="w-full text-sm">
-          <thead className="border-b border-[--color-border] bg-[--color-surface-sunken]">
-            <tr className="text-left text-xs uppercase tracking-wide text-[--color-text-muted]">
+          <thead className="border-b border-line bg-sunken">
+            <tr className="text-left text-xs uppercase tracking-wide text-ink-soft">
               <th scope="col" className="px-4 py-3 font-medium">Usuario</th>
               <th scope="col" className="px-4 py-3 font-medium">Rol</th>
               <th scope="col" className="px-4 py-3 font-medium">Estado</th>
@@ -88,7 +88,7 @@ export default async function UsersPage() {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.id} className="border-b border-[--color-border] last:border-0">
+              <tr key={user.id} className="border-b border-line last:border-0">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     <span
@@ -98,8 +98,8 @@ export default async function UsersPage() {
                       {initials(user.fullName)}
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate font-medium text-[--color-text]">{user.fullName}</p>
-                      <p className="truncate text-xs text-[--color-text-muted]">{user.email}</p>
+                      <p className="truncate font-medium text-ink">{user.fullName}</p>
+                      <p className="truncate text-xs text-ink-soft">{user.email}</p>
                     </div>
                   </div>
                 </td>
@@ -111,7 +111,7 @@ export default async function UsersPage() {
                 <td className="px-4 py-3">
                   <StateChip active={user.isActive} pending={user.mustChangePassword} />
                 </td>
-                <td className="px-4 py-3 text-xs text-[--color-text-muted]">
+                <td className="px-4 py-3 text-xs text-ink-soft">
                   {user.lastLoginAt ? formatDateTime(user.lastLoginAt) : 'Nunca'}
                 </td>
                 <td className="px-4 py-3">
@@ -130,7 +130,7 @@ export default async function UsersPage() {
         </table>
       </div>
 
-      <p className="mt-6 flex items-start gap-2 text-xs text-[--color-text-muted]">
+      <p className="mt-6 flex items-start gap-2 text-xs text-ink-soft">
         <ShieldCheck className="mt-0.5 size-4 shrink-0" aria-hidden />
         <span>
           Nadie puede modificar sus propios permisos ni desactivar su cuenta, y siempre debe quedar al
@@ -143,7 +143,7 @@ export default async function UsersPage() {
 
 function RoleChip({ code }: { code: RoleCode }) {
   return (
-    <span className="mr-1.5 inline-block rounded-full bg-[--color-surface-sunken] px-2 py-0.5 text-xs text-[--color-text-muted]">
+    <span className="mr-1.5 inline-block rounded-full bg-sunken px-2 py-0.5 text-xs text-ink-soft">
       {ROLE_SEED[code]?.name ?? code}
     </span>
   )
@@ -152,20 +152,20 @@ function RoleChip({ code }: { code: RoleCode }) {
 function StateChip({ active, pending }: { active: boolean; pending: boolean }) {
   if (!active) {
     return (
-      <span className="inline-block rounded-full bg-idle-bg px-2 py-0.5 text-xs font-medium text-idle">
+      <span className="inline-block rounded-full bg-mute-surface px-2 py-0.5 text-xs font-medium text-mute">
         Inactivo
       </span>
     )
   }
   if (pending) {
     return (
-      <span className="inline-block rounded-full bg-warning-bg px-2 py-0.5 text-xs font-medium text-warning">
+      <span className="inline-block rounded-full bg-warn-surface px-2 py-0.5 text-xs font-medium text-warn">
         Clave temporal
       </span>
     )
   }
   return (
-    <span className="inline-block rounded-full bg-success-bg px-2 py-0.5 text-xs font-medium text-success">
+    <span className="inline-block rounded-full bg-ok-surface px-2 py-0.5 text-xs font-medium text-ok">
       Activo
     </span>
   )
@@ -188,7 +188,7 @@ function UserActions({
 }) {
   if (isSelf) {
     return (
-      <p className={`mt-3 text-xs text-[--color-text-subtle] lg:mt-0 ${align === 'right' ? 'text-right' : ''}`}>
+      <p className={`mt-3 text-xs text-ink-faint lg:mt-0 ${align === 'right' ? 'text-right' : ''}`}>
         Tu cuenta
       </p>
     )

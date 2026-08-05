@@ -13,10 +13,10 @@ export const metadata: Metadata = { title: 'Auditoría' }
 const PAGE_SIZE = 25
 
 const SEVERITY_STYLES: Record<string, string> = {
-  INFO: 'bg-info-bg text-info',
+  INFO: 'bg-info-surface text-info',
   NOTICE: 'bg-brand-100 text-brand-800',
-  WARNING: 'bg-warning-bg text-warning',
-  CRITICAL: 'bg-danger-bg text-danger',
+  WARNING: 'bg-warn-surface text-warn',
+  CRITICAL: 'bg-risk-surface text-risk',
 }
 
 /** Traduce el código técnico a algo que una propietaria entienda sin manual. */
@@ -86,14 +86,14 @@ export default async function AuditPage({
           {entries.map((entry) => (
             <li
               key={entry.id}
-              className="rounded-xl border border-[--color-border] bg-[--color-surface-raised] p-4"
+              className="rounded-xl border border-line bg-surface p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-[--color-text]">
+                  <p className="text-sm font-medium text-ink">
                     {ACTION_LABELS[entry.action] ?? entry.action}
                   </p>
-                  <p className="mt-0.5 text-xs text-[--color-text-muted]">
+                  <p className="mt-0.5 text-xs text-ink-soft">
                     {entry.actorEmail ?? 'Sistema'}
                     {entry.actorRole ? ` · ${entry.actorRole}` : ''}
                     {entry.ip ? ` · ${entry.ip}` : ''}
@@ -110,7 +110,7 @@ export default async function AuditPage({
                   </span>
                   <time
                     dateTime={entry.createdAt.toISOString()}
-                    className="text-xs text-[--color-text-muted]"
+                    className="text-xs text-ink-soft"
                   >
                     {formatDateTime(entry.createdAt)}
                   </time>
@@ -118,7 +118,7 @@ export default async function AuditPage({
               </div>
 
               {entry.reason && (
-                <p className="mt-2 text-xs text-[--color-text-muted]">
+                <p className="mt-2 text-xs text-ink-soft">
                   <span className="font-medium">Motivo:</span> {entry.reason}
                 </p>
               )}
@@ -147,7 +147,7 @@ export default async function AuditPage({
           >
             Anterior
           </PageLink>
-          <span className="text-xs text-[--color-text-muted]">
+          <span className="text-xs text-ink-soft">
             Página {page} de {totalPages}
           </span>
           <PageLink
@@ -165,11 +165,11 @@ export default async function AuditPage({
 function Diff({ title, value }: { title: string; value: unknown }) {
   if (!value || (typeof value === 'object' && Object.keys(value).length === 0)) return null
   return (
-    <div className="rounded-lg bg-[--color-surface-sunken] p-2.5">
-      <p className="mb-1 text-[11px] font-medium uppercase tracking-wide text-[--color-text-muted]">
+    <div className="rounded-lg bg-sunken p-2.5">
+      <p className="mb-1 text-[11px] font-medium uppercase tracking-wide text-ink-soft">
         {title}
       </p>
-      <pre className="overflow-x-auto text-xs text-[--color-text]">{JSON.stringify(value, null, 2)}</pre>
+      <pre className="overflow-x-auto text-xs text-ink">{JSON.stringify(value, null, 2)}</pre>
     </div>
   )
 }
@@ -182,7 +182,7 @@ function FilterChip({ href, active, label }: { href: string; active: boolean; la
         'rounded-full border px-3 py-1 text-xs transition-colors',
         active
           ? 'border-brand-500 bg-brand-50 font-medium text-brand-700'
-          : 'border-[--color-border-strong] text-[--color-text-muted] hover:bg-[--color-surface-sunken]',
+          : 'border-line-strong text-ink-soft hover:bg-sunken',
       )}
     >
       {label}
@@ -200,7 +200,7 @@ function PageLink({
   children: React.ReactNode
 }) {
   if (disabled) {
-    return <span className="text-xs text-[--color-text-subtle]">{children}</span>
+    return <span className="text-xs text-ink-faint">{children}</span>
   }
   return (
     <Link href={href as Route} className="text-xs font-medium text-brand-700 hover:underline">

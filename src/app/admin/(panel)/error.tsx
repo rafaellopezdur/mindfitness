@@ -20,22 +20,22 @@ export default function PanelError({ error, reset }: { error: Error & { digest?:
   return (
     <div className="grid min-h-[60vh] grid-cols-1 place-items-center">
       <div className="w-full max-w-md text-center">
-        <span className="inline-flex size-12 items-center justify-center rounded-full bg-danger-bg text-danger">
+        <span className="inline-flex size-12 items-center justify-center rounded-full bg-risk-surface text-risk">
           <ShieldAlert className="size-6" aria-hidden />
         </span>
 
-        <h1 className="mt-4 text-lg font-semibold text-[--color-text]">
+        <h1 className="mt-4 text-lg font-semibold text-ink">
           {isForbidden ? 'No tienes acceso a esta sección' : 'Algo salió mal'}
         </h1>
 
-        <p className="mt-2 text-sm text-[--color-text-muted]">
+        <p className="mt-2 text-sm text-ink-soft">
           {isForbidden
             ? 'Tu rol no incluye este permiso. Si crees que deberías tenerlo, pídeselo a una administradora.'
             : 'No pudimos completar la operación. Puedes intentarlo de nuevo.'}
         </p>
 
         {error.digest && (
-          <p className="mt-3 text-xs text-[--color-text-subtle]">
+          <p className="mt-3 text-xs text-ink-faint">
             Código de error: <code className="tabular">{error.digest}</code>
           </p>
         )}

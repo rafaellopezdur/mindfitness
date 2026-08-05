@@ -49,7 +49,7 @@ export default async function SettingsPage({
       />
 
       <nav aria-label="Secciones de configuración" className="mb-5 -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
-        <ul className="flex min-w-max gap-1 border-b border-[--color-border]">
+        <ul className="flex min-w-max gap-1 border-b border-line">
           {SECTIONS.map((item) => (
             <li key={item.key}>
               <Link
@@ -59,7 +59,7 @@ export default async function SettingsPage({
                   'inline-block border-b-2 px-3 py-2 text-sm transition-colors',
                   section === item.key
                     ? 'border-brand-500 font-medium text-brand-700'
-                    : 'border-transparent text-[--color-text-muted] hover:text-[--color-text]',
+                    : 'border-transparent text-ink-soft hover:text-ink',
                 )}
               >
                 {item.label}
@@ -70,7 +70,7 @@ export default async function SettingsPage({
       </nav>
 
       {!canEdit && (
-        <p className="mb-5 rounded-lg bg-info-bg px-4 py-3 text-sm text-info">
+        <p className="mb-5 rounded-lg bg-info-surface px-4 py-3 text-sm text-info">
           Puedes consultar la configuración, pero no modificarla.
         </p>
       )}
@@ -120,7 +120,7 @@ export default async function SettingsPage({
             }}
           />
         ) : (
-          <div className="rounded-2xl border border-[--color-border] bg-[--color-surface-raised] p-5 text-sm text-[--color-text-muted]">
+          <div className="rounded-2xl border border-line bg-surface p-5 text-sm text-ink-soft">
             <p>Nombre: {business.name}</p>
             <p className="mt-1">Vencimiento: aviso {rules.expiringSoonDays} días antes</p>
             <p className="mt-1">Gracia: {rules.defaultGraceDays} días</p>

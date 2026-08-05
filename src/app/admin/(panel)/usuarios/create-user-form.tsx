@@ -33,14 +33,14 @@ export function CreateUserForm() {
   // Contraseña temporal: se muestra una sola vez, en cuanto se crea.
   if (state.ok && state.temporaryPassword) {
     return (
-      <div className="rounded-2xl border border-success/30 bg-success-bg p-5">
-        <p className="text-sm font-semibold text-[--color-text]">Usuario creado</p>
-        <p className="mt-1 text-sm text-[--color-text-muted]">{state.message}</p>
+      <div className="rounded-2xl border border-ok/30 bg-ok-surface p-5">
+        <p className="text-sm font-semibold text-ink">Usuario creado</p>
+        <p className="mt-1 text-sm text-ink-soft">{state.message}</p>
 
-        <div className="mt-4 rounded-lg border border-[--color-border-strong] bg-[--color-surface-raised] p-3">
-          <p className="text-xs text-[--color-text-muted]">Contraseña temporal</p>
+        <div className="mt-4 rounded-lg border border-line-strong bg-surface p-3">
+          <p className="text-xs text-ink-soft">Contraseña temporal</p>
           <div className="mt-1 flex items-center justify-between gap-3">
-            <code className="tabular text-lg font-semibold tracking-wide text-[--color-text]">
+            <code className="tabular text-lg font-semibold tracking-wide text-ink">
               {state.temporaryPassword}
             </code>
             <Button
@@ -58,7 +58,7 @@ export function CreateUserForm() {
           </div>
         </div>
 
-        <p className="mt-3 text-xs text-[--color-text-muted]">
+        <p className="mt-3 text-xs text-ink-soft">
           Entrégasela en persona. <strong>No se vuelve a mostrar</strong> y se le pedirá cambiarla al entrar.
         </p>
 
@@ -79,11 +79,11 @@ export function CreateUserForm() {
   }
 
   return (
-    <div className="rounded-2xl border border-[--color-border] bg-[--color-surface-raised] p-5">
+    <div className="rounded-2xl border border-line bg-surface p-5">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-sm font-semibold text-[--color-text]">Nuevo usuario</h2>
-          <p className="text-xs text-[--color-text-muted]">
+          <h2 className="text-sm font-semibold text-ink">Nuevo usuario</h2>
+          <p className="text-xs text-ink-soft">
             Se genera una contraseña temporal que deberá cambiar al entrar.
           </p>
         </div>
@@ -94,7 +94,7 @@ export function CreateUserForm() {
 
       <form action={formAction} className="space-y-4" noValidate>
         {state.message && !state.ok && (
-          <p role="alert" className="rounded-lg bg-danger-bg px-3 py-2 text-sm text-danger">
+          <p role="alert" className="rounded-lg bg-risk-surface px-3 py-2 text-sm text-risk">
             {state.message}
           </p>
         )}
@@ -113,14 +113,14 @@ export function CreateUserForm() {
         </Field>
 
         <fieldset>
-          <legend className="mb-2 block text-sm font-medium text-[--color-text]">Rol</legend>
+          <legend className="mb-2 block text-sm font-medium text-ink">Rol</legend>
           <div className="space-y-2">
             {ROLES.map((role, index) => (
               <label
                 key={role.code}
                 className={cn(
-                  'flex cursor-pointer items-start gap-3 rounded-lg border border-[--color-border-strong] p-3',
-                  'hover:bg-[--color-surface-sunken] has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50',
+                  'flex cursor-pointer items-start gap-3 rounded-lg border border-line-strong p-3',
+                  'hover:bg-sunken has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50',
                 )}
               >
                 <input
@@ -128,17 +128,17 @@ export function CreateUserForm() {
                   name="roleCode"
                   value={role.code}
                   defaultChecked={index === 0}
-                  className="mt-0.5 size-4 accent-[--color-brand-500]"
+                  className="mt-0.5 size-4 accent-brand-500"
                 />
                 <span className="min-w-0">
-                  <span className="block text-sm font-medium text-[--color-text]">{role.name}</span>
-                  <span className="block text-xs text-[--color-text-muted]">{role.hint}</span>
+                  <span className="block text-sm font-medium text-ink">{role.name}</span>
+                  <span className="block text-xs text-ink-soft">{role.hint}</span>
                 </span>
               </label>
             ))}
           </div>
           {state.fieldErrors?.roleCode && (
-            <p role="alert" className="mt-1 text-xs font-medium text-danger">
+            <p role="alert" className="mt-1 text-xs font-medium text-risk">
               {state.fieldErrors.roleCode}
             </p>
           )}

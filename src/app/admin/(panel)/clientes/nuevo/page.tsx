@@ -17,7 +17,7 @@ export default async function NewClientPage() {
     <>
       <Link
         href="/admin/clientes"
-        className="mb-4 inline-flex items-center gap-1.5 text-sm text-[--color-text-muted] hover:text-[--color-text]"
+        className="mb-4 inline-flex items-center gap-1.5 text-sm text-ink-soft hover:text-ink"
       >
         <ArrowLeft className="size-4" aria-hidden />
         Clientes

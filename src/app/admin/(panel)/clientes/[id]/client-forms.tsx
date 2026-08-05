@@ -152,7 +152,7 @@ export function AddNoteForm({ clientId, canSeeTrainerNotes }: { clientId: string
             type="checkbox"
             name="visibility"
             value="TRAINER"
-            className="size-4 accent-[--color-brand-500]"
+            className="size-4 accent-brand-500"
           />
           Visible para el entrenador asignado
         </label>

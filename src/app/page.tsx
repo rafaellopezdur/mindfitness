@@ -9,7 +9,7 @@ export default function HomePage() {
   // max-content del hijo y el texto desborda el viewport en móvil.
   // `grid-cols-1` es `minmax(0,1fr)`, que ata la columna al ancho real.
   return (
-    <main className="grid min-h-dvh grid-cols-1 place-items-center bg-ink px-6 text-center">
+    <main className="grid min-h-dvh grid-cols-1 place-items-center bg-night px-6 text-center">
       <div className="flex w-full max-w-lg flex-col items-center">
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-brand-500 sm:text-sm">
           Portal en construcción

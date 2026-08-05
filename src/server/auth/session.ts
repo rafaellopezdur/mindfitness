@@ -18,9 +18,27 @@ import { isProduction } from '@/config/env'
  */
 
 export const SESSION_COOKIE = 'mfc_session'
+
+/** Vigencia real de la sesión. Es la que manda: vive en la base de datos. */
 const SESSION_DAYS = 7
-/** Se renueva la caducidad solo si queda menos de esto, para no escribir en cada visita. */
+
+/**
+ * La cookie dura más que la sesión a propósito.
+ *
+ * La autoridad sobre la validez es SIEMPRE la fila de `sessions`; la cookie
+ * solo transporta el token. Si la cookie caducara junto con la sesión habría
+ * que reescribirla al renovarla, y Next no permite modificar cookies durante
+ * el render de una página: solo en Server Actions y Route Handlers.
+ *
+ * Con una cookie de vida larga, la ventana deslizante se mantiene únicamente
+ * en la base de datos y no hace falta tocarla al leer.
+ */
+const COOKIE_DAYS = 30
+
+/** Se extiende la caducidad solo si queda menos de esto, para no escribir en cada visita. */
 const REFRESH_THRESHOLD_MS = 24 * 60 * 60 * 1000
+
+const days = (n: number) => n * 24 * 60 * 60 * 1000
 
 function hashToken(token: string): string {
   return createHash('sha256').update(token).digest('hex')
@@ -33,7 +51,6 @@ export interface SessionMeta {
 
 export async function createSession(userId: string, meta: SessionMeta = {}) {
   const token = randomBytes(32).toString('base64url')
-  const expiresAt = new Date(Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000)
 
   const session = await prisma.session.create({
     data: {
@@ -41,7 +58,7 @@ export async function createSession(userId: string, meta: SessionMeta = {}) {
       tokenHash: hashToken(token),
       ip: meta.ip ?? null,
       userAgent: meta.userAgent ?? null,
-      expiresAt,
+      expiresAt: new Date(Date.now() + days(SESSION_DAYS)),
     },
   })
 
@@ -51,7 +68,7 @@ export async function createSession(userId: string, meta: SessionMeta = {}) {
     sameSite: 'lax',
     secure: isProduction,
     path: '/',
-    expires: expiresAt,
+    expires: new Date(Date.now() + days(COOKIE_DAYS)),
   })
 
   return session
@@ -83,16 +100,13 @@ export async function readSession() {
   if (session.expiresAt.getTime() <= Date.now()) return null
   if (!session.user.isActive || session.user.deletedAt) return null
 
-  // Renovación perezosa: solo se escribe cuando de verdad queda poco.
+  // Ventana deslizante: se extiende solo en la base de datos, y solo cuando de
+  // verdad queda poco. La cookie NO se toca aquí — esto se ejecuta durante el
+  // render de la página, donde Next prohíbe modificar cookies.
   if (session.expiresAt.getTime() - Date.now() < REFRESH_THRESHOLD_MS) {
-    const expiresAt = new Date(Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000)
-    await prisma.session.update({ where: { id: session.id }, data: { expiresAt } })
-    store.set(SESSION_COOKIE, token, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: isProduction,
-      path: '/',
-      expires: expiresAt,
+    await prisma.session.update({
+      where: { id: session.id },
+      data: { expiresAt: new Date(Date.now() + days(SESSION_DAYS)) },
     })
   }
 

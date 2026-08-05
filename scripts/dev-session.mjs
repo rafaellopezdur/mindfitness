@@ -4,6 +4,10 @@
  * automatizar el formulario de ingreso.
  *
  *   node --env-file=.env scripts/dev-session.mjs [correo]
+ *
+ * NO modifica el usuario. En particular, no toca `mustChangePassword`: hacerlo
+ * llegó a marcar como temporal una contraseña que la persona ya había cambiado,
+ * obligándola a cambiarla otra vez en cada carga.
  */
 
 import { createHash, randomBytes } from 'node:crypto'
@@ -29,7 +33,9 @@ await prisma.session.create({
     userId: user.id,
     tokenHash: createHash('sha256').update(token).digest('hex'),
     userAgent: 'dev-session-script',
-    expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+    // 8 horas: por debajo del umbral de renovación (24 h) la sesión entraba en
+    // la rama de extensión en cada lectura, que es donde estaba el fallo.
+    expiresAt: new Date(Date.now() + 8 * 60 * 60 * 1000),
   },
 })
 

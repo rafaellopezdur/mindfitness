@@ -28,7 +28,6 @@ export const NAV_ITEMS: NavItem[] = [
     icon: 'users',
     anyOf: [P.CLIENT_READ, P.CLIENT_READ_ASSIGNED],
     mobile: true,
-    soon: true,
   },
   { href: '/admin/acceso', label: 'Acceso rápido', icon: 'scan', anyOf: [P.ACCESS_CARD_READ], mobile: true, soon: true },
   { href: '/admin/pagos', label: 'Pagos', icon: 'wallet', anyOf: [P.PAYMENT_READ], mobile: true, soon: true },
@@ -40,7 +39,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: '/admin/cartera', label: 'Cartera', icon: 'alert', anyOf: [P.COLLECTION_READ], soon: true },
   { href: '/admin/finanzas', label: 'Finanzas', icon: 'chart', anyOf: [P.FINANCE_DASHBOARD_READ], soon: true },
   { href: '/admin/reportes', label: 'Reportes', icon: 'report', anyOf: [P.REPORT_OPERATIONAL_READ], soon: true },
-  { href: '/admin/configuracion', label: 'Configuración', icon: 'settings', anyOf: [P.SETTINGS_READ], soon: true },
+  { href: '/admin/configuracion', label: 'Configuración', icon: 'settings', anyOf: [P.SETTINGS_READ] },
   { href: '/admin/usuarios', label: 'Usuarios', icon: 'shield', anyOf: [P.USER_READ] },
   { href: '/admin/auditoria', label: 'Auditoría', icon: 'history', anyOf: [P.AUDIT_READ] },
 ]

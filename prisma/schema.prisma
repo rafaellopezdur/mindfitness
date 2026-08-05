@@ -218,6 +218,189 @@ model BusinessSetting {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// CLIENTES  ·  Fase 2
+// ═══════════════════════════════════════════════════════════════════════════
+
+enum DocumentType {
+  CC // cédula de ciudadanía
+  CE // cédula de extranjería
+  TI // tarjeta de identidad
+  PA // pasaporte
+  NIT
+  PEP // permiso especial de permanencia
+  PPT // permiso por protección temporal
+}
+
+/// Anulación manual del estado calculado. Todo lo demás se deriva de la
+/// membresía vigente (docs/05-flujos-y-estados.md §10).
+enum ClientStatusOverride {
+  BLOCKED
+  INACTIVE
+}
+
+model Client {
+  id String @id @default(uuid(7)) @db.Uuid
+
+  /// Reservado para el portal del miembro (Fase v2.0).
+  userId String? @unique @map("user_id") @db.Uuid
+  /// Consecutivo legible: MFC-00001
+  code   String  @unique
+
+  firstName String @map("first_name")
+  lastName  String @map("last_name")
+
+  documentType   DocumentType @map("document_type")
+  documentNumber String       @map("document_number")
+
+  birthDate DateTime? @map("birth_date") @db.Date
+  gender    String?
+
+  phone    String
+  whatsapp String?
+  email    String?
+  address  String?
+  city     String?
+  photoUrl String? @map("photo_url")
+
+  /// Canal de adquisición. Catálogo configurable, no un enum cerrado.
+  acquisitionChannel String?  @map("acquisition_channel")
+  registeredAt       DateTime @default(now()) @map("registered_at") @db.Timestamptz(3)
+
+  statusOverride       ClientStatusOverride? @map("status_override")
+  statusOverrideReason String?               @map("status_override_reason")
+
+  /// Reservado para el check-in por QR (Fase v2.2).
+  accessCode String? @unique @map("access_code")
+
+  /// Texto normalizado (sin tildes, minúsculas) para la búsqueda rápida.
+  searchText String @default("") @map("search_text")
+
+  /// Fusión de duplicados: el registro absorbido conserva a quién apunta.
+  mergedIntoId String? @map("merged_into_id") @db.Uuid
+
+  createdBy String?   @map("created_by") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(3)
+
+  emergencyContacts EmergencyContact[]
+  notes             ClientNote[]
+  documents         ClientDocument[]
+  consents          Consent[]
+
+  @@unique([documentType, documentNumber])
+  @@index([searchText])
+  @@index([phone])
+  @@index([email])
+  @@index([deletedAt])
+  @@map("clients")
+}
+
+model EmergencyContact {
+  id           String  @id @default(uuid(7)) @db.Uuid
+  clientId     String  @map("client_id") @db.Uuid
+  name         String
+  relationship String?
+  phone        String
+  isPrimary    Boolean @default(true) @map("is_primary")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@map("emergency_contacts")
+}
+
+enum NoteVisibility {
+  INTERNAL
+  TRAINER
+}
+
+/// Inmutable: una observación no se edita, se corrige añadiendo otra.
+model ClientNote {
+  id         String         @id @default(uuid(7)) @db.Uuid
+  clientId   String         @map("client_id") @db.Uuid
+  authorId   String?        @map("author_id") @db.Uuid
+  authorName String         @map("author_name")
+  body       String
+  visibility NoteVisibility @default(INTERNAL)
+  createdAt  DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId, createdAt])
+  @@map("client_notes")
+}
+
+model ClientDocument {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  clientId  String   @map("client_id") @db.Uuid
+  type      String
+  fileKey   String   @map("file_key")
+  fileName  String   @map("file_name")
+  mimeType  String   @map("mime_type")
+  sizeBytes Int      @map("size_bytes")
+  uploadedBy String? @map("uploaded_by") @db.Uuid
+  uploadedAt DateTime @default(now()) @map("uploaded_at") @db.Timestamptz(3)
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@map("documents")
+}
+
+enum ConsentType {
+  TERMS
+  DATA_PROCESSING
+  IMAGE_RIGHTS
+  HEALTH_DECLARATION
+}
+
+enum ConsentChannel {
+  WEB
+  ONSITE
+}
+
+/// Se guarda la VERSIÓN del texto aceptado: actualizar los términos no
+/// reescribe los consentimientos ya firmados (RN-84).
+model Consent {
+  id              String         @id @default(uuid(7)) @db.Uuid
+  clientId        String         @map("client_id") @db.Uuid
+  type            ConsentType
+  documentVersion String         @map("document_version")
+  acceptedAt      DateTime       @default(now()) @map("accepted_at") @db.Timestamptz(3)
+  ip              String?
+  userAgent       String?        @map("user_agent")
+  channel         ConsentChannel
+  signatureUrl    String?        @map("signature_url")
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId, type])
+  @@map("consents")
+}
+
+model Holiday {
+  id               String   @id @default(uuid(7)) @db.Uuid
+  date             DateTime @unique @db.Date
+  name             String
+  blocksOperations Boolean  @default(false) @map("blocks_operations")
+
+  @@map("holidays")
+}
+
+/// Consecutivo de códigos de cliente. Una fila por secuencia; se incrementa
+/// dentro de la transacción para no dejar huecos ni repetir bajo concurrencia.
+model Counter {
+  name  String @id
+  value Int    @default(0)
+
+  @@map("counters")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // INFRAESTRUCTURA TRANSVERSAL
 // ═══════════════════════════════════════════════════════════════════════════
 

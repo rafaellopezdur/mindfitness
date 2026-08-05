@@ -33,7 +33,7 @@ export default async function DashboardPage() {
 
   const fases = [
     { done: true, label: 'Fundaciones · identidad, permisos, sesiones y auditoría' },
-    { done: false, label: 'Clientes y configuración' },
+    { done: true, label: 'Clientes y configuración' },
     { done: false, label: 'Planes, servicios contratados y membresías' },
     { done: false, label: 'Pagos, asistencia y tarjeta del entrenador' },
   ]

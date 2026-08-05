@@ -1,4 +1,5 @@
 import 'server-only'
+import { cache } from 'react'
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto'
 import { cookies } from 'next/headers'
 import { prisma } from '@/server/infra/prisma'
@@ -74,8 +75,15 @@ export async function createSession(userId: string, meta: SessionMeta = {}) {
   return session
 }
 
-/** Devuelve la sesión vigente con su usuario, roles y permisos, o null. */
-export async function readSession() {
+/**
+ * Devuelve la sesión vigente con su usuario, roles y permisos, o null.
+ *
+ * Memorizada por petición con `cache()`: el layout, la página y cada Server
+ * Action comparten UNA lectura. Antes `getActor` y `getSessionUser` la llamaban
+ * por separado y la consulta —la más cara de la aplicación— se ejecutaba dos
+ * veces en cada carga.
+ */
+export const readSession = cache(async () => {
   const store = await cookies()
   const token = store.get(SESSION_COOKIE)?.value
   if (!token) return null
@@ -111,7 +119,7 @@ export async function readSession() {
   }
 
   return session
-}
+})
 
 export async function destroyCurrentSession() {
   const store = await cookies()

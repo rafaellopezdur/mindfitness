@@ -125,6 +125,15 @@ async function main() {
         })
       }
 
+      // Permite capturar estados que dependen de preferencias guardadas,
+      // p. ej. la barra lateral plegada: MFC_STORAGE=clave=valor
+      if (process.env.MFC_STORAGE) {
+        const [key, ...rest] = process.env.MFC_STORAGE.split('=')
+        await client.send('Page.addScriptToEvaluateOnNewDocument', {
+          source: `localStorage.setItem(${JSON.stringify(key)}, ${JSON.stringify(rest.join('='))})`,
+        })
+      }
+
       await client.send('Emulation.setDeviceMetricsOverride', {
         width: vp.width,
         height: vp.height,
